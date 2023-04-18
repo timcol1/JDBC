@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<Student> studentList = CRUDUtils.getStudents("SELECT * FROM STUDENTS");
+        List<Student> studentList = CRUDUtils.getStudents("SELECT * FROM students");
         System.out.println(studentList);
     }
 }
