@@ -9,5 +9,10 @@ public class Main {
     public static void main(String[] args) {
         List<Student> studentList = CRUDUtils.getStudents("SELECT * FROM students");
         System.out.println(studentList);
+        Student student = new Student();
+        student.setName("Denis");
+        student.setSurname("Shemaev");
+        student.setCourseName("Dance_Course");
+        System.out.println(CRUDUtils.saveStudent(student));
     }
 }
