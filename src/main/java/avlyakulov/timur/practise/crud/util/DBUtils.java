@@ -11,21 +11,19 @@ import java.util.Properties;
 
 public class DBUtils {
     //здесь бы будем создавать connection
-    //private static String dbURL = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM 'classpath:init.sql'";
-
-    /*private static String dbUsername = "sa";
-    private static String dbPassword = "";*/
 
     public static Connection getConnection() {
         //пример взаимодействия с папкой resources для бд
-        String dbURL = null;
-        String dbUsername = "sa";
-        String dbPassword = "";
+        String dbURL = " ";
+        String dbUsername = " ";
+        String dbPassword = " ";
 
         Properties properties = new Properties();
         try (BufferedReader fileReader = new BufferedReader(new FileReader("src/main/resources/config.properties"))) {
             properties.load(fileReader);
             dbURL = properties.getProperty("db.host");
+            dbUsername = properties.getProperty("db.name");
+            dbPassword = properties.getProperty("db.pass");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -40,5 +38,4 @@ public class DBUtils {
         }
         return connection;
     }
-
 }
