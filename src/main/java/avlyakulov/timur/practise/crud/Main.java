@@ -14,5 +14,7 @@ public class Main {
         student.setSurname("Shemaev");
         student.setCourseName("Dance_Course");
         System.out.println(CRUDUtils.saveStudent(student));
+        System.out.println(CRUDUtils.updateStudent(1, "Gym_Course"));
+        CRUDUtils.deleteStudent(1);
     }
 }
