@@ -1,6 +1,6 @@
-package avlyakulov.timur.practise.crud.util;
+package avlyakulov.timur.practise.db_in_memory.util;
 
-import avlyakulov.timur.practise.crud.entity.Student;
+import avlyakulov.timur.practise.db_in_memory.entity.Student;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

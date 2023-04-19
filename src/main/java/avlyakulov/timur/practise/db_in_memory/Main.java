@@ -1,7 +1,7 @@
-package avlyakulov.timur.practise.crud;
+package avlyakulov.timur.practise.db_in_memory;
 
-import avlyakulov.timur.practise.crud.entity.Student;
-import avlyakulov.timur.practise.crud.util.CRUDUtils;
+import avlyakulov.timur.practise.db_in_memory.entity.Student;
+import avlyakulov.timur.practise.db_in_memory.util.CRUDUtils;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package avlyakulov.timur.practise.crud.entity;
+package avlyakulov.timur.practise.db_in_memory.entity;
 
 public class Student {
     private int id;
