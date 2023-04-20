@@ -1,13 +1,9 @@
 package avlyakulov.timur.book.chapter_13.examle.editing;
 
-import avlyakulov.timur.book.chapter_13.examle.conn.Abonent;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 public class EditRowInTable {

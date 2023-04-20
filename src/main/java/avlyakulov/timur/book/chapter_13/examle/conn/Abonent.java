@@ -1,25 +1,15 @@
 package avlyakulov.timur.book.chapter_13.examle.conn;
 
 public class Abonent extends Entity {
-    private int id;
     private String name;
     private int phone;
 
     public Abonent() {
     }
 
-    public Abonent(int id, String name, int phone) {
-        this.id = id;
+    public Abonent(String name, int phone) {
         this.name = name;
         this.phone = phone;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -38,10 +28,11 @@ public class Abonent extends Entity {
         this.phone = phone;
     }
 
+    @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Abonent{");
-        sb.append("id=").append(id).append(", name='").append(name).append('\'');
-        sb.append(", phone=").append(phone).append('}');
-        return sb.toString();
+        return "Abonent{" +
+                "name='" + name + '\'' +
+                ", phone=" + phone +
+                '}';
     }
 }
