@@ -1,4 +1,4 @@
-package avlyakulov.timur.book.chapter_13.examle.conn;
+package avlyakulov.timur.book.chapter_13.example.conn;
 
 import java.io.Serializable;
 

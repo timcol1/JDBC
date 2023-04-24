@@ -1,4 +1,4 @@
-package avlyakulov.timur.book.chapter_13.examle.conn;
+package avlyakulov.timur.book.chapter_13.example.conn;
 
 public class Abonent extends Entity {
     private String name;
