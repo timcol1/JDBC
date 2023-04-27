@@ -23,10 +23,11 @@ public class DBUtil {
         }
 
         try (Connection connection = DriverManager.getConnection(connectionUrl, userName, password);
-             PreparedStatement preparedStatement = connection.prepareStatement("Select * from books")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * from books where id = ?")) {
             //preparedStatement.executeUpdate(); // кодга мы хотим обновить базу данных
             //preparedStatement.executeUpdate("Update books set name = '1984' where id = 2");
-
+            //Select * from books where id = 1 or 1 = 1
+            preparedStatement.setString(1,"2 or 1 = 1");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 System.out.printf("%d %s\n", resultSet.getInt("id"), resultSet.getString("name"));
