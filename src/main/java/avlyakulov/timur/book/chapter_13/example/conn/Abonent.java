@@ -24,9 +24,6 @@ public class Abonent extends Entity {
         return phone;
     }
 
-    public void setPhone(int phone) {
-        this.phone = phone;
-    }
 
     @Override
     public String toString() {
