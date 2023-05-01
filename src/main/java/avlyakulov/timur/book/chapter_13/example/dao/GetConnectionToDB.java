@@ -11,7 +11,7 @@ import java.util.Properties;
 public class GetConnectionToDB {
     public static Connection createConnection() throws SQLException {
         Properties properties = new Properties();
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/postrgres.properties"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/postgres.properties"))) {
             properties.load(reader);
         } catch (IOException e) {
             throw new RuntimeException(e);
