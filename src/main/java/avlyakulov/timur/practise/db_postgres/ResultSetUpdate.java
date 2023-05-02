@@ -25,6 +25,8 @@ public class ResultSetUpdate {
                 System.out.println(resultSet.getString(2));
                 System.out.println(resultSet.getString(3));
             }
+
+
             //изменение последней записи в параметре имя
             resultSet.last();
             resultSet.updateString("name", "LilyaUA");

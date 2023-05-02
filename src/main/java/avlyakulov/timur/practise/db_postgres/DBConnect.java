@@ -15,14 +15,11 @@ public class DBConnect {
             String username = properties.getProperty("db.name");
             String password = properties.getProperty("db.pass");
             try (Connection connection = DriverManager.getConnection(url, username, password);
-                     PreparedStatement preparedStatement = connection.prepareStatement("Select * from persons.books")) {
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()) {
-                    System.out.println(resultSet.getString(1));
-                    System.out.println(resultSet.getString(2));
-                    System.out.println(resultSet.getString(3));
-                }
-
+                 PreparedStatement preparedStatement = connection.prepareStatement("Select * from persons.books", Statement.RETURN_GENERATED_KEYS)) {
+                ResultSet rs = preparedStatement.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                String className = rsmd.getColumnClassName(1);
+                System.out.println("Class name: " + className);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

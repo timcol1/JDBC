@@ -9,11 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-a
+
 public class CachedRowSetExample {
     //пример кешированого запроса, когда уже соеденение к бд закрыто и мы получаем данные, в виде класса
     public static RowSet getData() {
-        CachedRowSet cachedRowSet = null;
+        CachedRowSet cachedRowSet;
         try (Connection connection = GetConnectionToDB.createConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * from persons.books")) {
             cachedRowSet = RowSetProvider.newFactory().createCachedRowSet();
