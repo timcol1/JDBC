@@ -24,9 +24,11 @@ public class GetDataFromDB {
     private final String SQL_SELECT_INFORMATION_ACTORS_BY_NAME_FILM = "Select fullname_actor,birthday_actor\n" +
             "from videolibrary.actors\n" +
             "where id_film = (select id_film from videolibrary.films where name_film = ?)";
-    private final String SQL_SELECT_INFORMATION_FILMS_BY_NUMBERS_ACTORS = "Select fullname_actor,birthday_actor\n" +
-            "from videolibrary.actors\n" +
-            "where id_film = (select id_film from videolibrary.films where name_film = ?)";
+    private final String SQL_SELECT_INFORMATION_FILMS_BY_NUMBERS_ACTORS = "Select name_film,release_date,country_release,count(*) number_actors\n" +
+            "from videolibrary.films,videolibrary.actors\n" +
+            "where films.id_film = actors.id_film\n" +
+            "group by name_film, release_date, country_release\n" +
+            "HAVING count(*) >= ?;";
 
     public void findAllFilmsByYear() {
         try (Connection connection = ConnectToVideoLibraryDB.getConnectionToDB();
@@ -62,12 +64,17 @@ public class GetDataFromDB {
 
     }
 
-    public void findFilmsByNumberOfActors() {
+    public void findFilmsByNumberOfActors(BufferedReader reader) {
         try (Connection connection = ConnectToVideoLibraryDB.getConnectionToDB();
-        PreparedStatement getInformationFilmsByNumberOfActors = connection.prepareStatement(SQL_SELECT_INFORMATION_FILMS_BY_NUMBERS_ACTORS)) {
-
-        } catch (SQLException e) {
-
+             PreparedStatement getInformationFilmsByNumberOfActors = connection.prepareStatement(SQL_SELECT_INFORMATION_FILMS_BY_NUMBERS_ACTORS)) {
+            System.out.println("Enter the number of actors in the film to find information about film");
+            int numberActors = Integer.parseInt(reader.readLine());
+            getInformationFilmsByNumberOfActors.setInt(1, numberActors);
+            ResultSet setFilms = getInformationFilmsByNumberOfActors.executeQuery();
+            while (setFilms.next())
+                System.out.printf("%d.%s\n  Data of release - %s\n  Country of release - %s\n  Number of actors in this film - %d\n", setFilms.getRow(),setFilms.getString("name_film"),setFilms.getDate("release_date"), setFilms.getString("country_release"),setFilms.getInt("number_actors"));
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
