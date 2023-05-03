@@ -32,6 +32,7 @@ public class VideoLibraryController {
         System.out.println("If you want to find all films for this year and past press 2");
         System.out.println("if you want to get name of film and number actors in this film press 3");
         System.out.println("If you want to find information of film by number of actors in this film press 4");
+        System.out.println("If you want to delete film by number of years press 5");
         System.out.println("If you want to finish program press 0");
         System.out.println();
     }
@@ -42,6 +43,7 @@ public class VideoLibraryController {
             case "2" -> getFilmsByYear();
             case "3" -> getNameFilmNumbersActors(reader);
             case "4" -> getInformationAboutFilmBYNumberOfActors(reader);
+            case "5" -> deleteFilm(reader);
         }
     }
 
@@ -58,5 +60,8 @@ public class VideoLibraryController {
     }
     private void getInformationAboutFilmBYNumberOfActors (BufferedReader reader) {
         getDataFromDB.findFilmsByNumberOfActors(reader);
+    }
+    private void deleteFilm (BufferedReader reader) {
+        getDataFromDB.deleteFilmsByDate(reader);
     }
 }

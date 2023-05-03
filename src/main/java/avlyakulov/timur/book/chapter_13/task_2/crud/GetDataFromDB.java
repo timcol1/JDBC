@@ -30,6 +30,9 @@ public class GetDataFromDB {
             "group by name_film, release_date, country_release\n" +
             "HAVING count(*) >= ?;";
 
+    private final String SQL_DELETE_FILM_BY_YEAR = "Delete from videolibrary.films\n" +
+            "where extract(year from current_date) - extract(year from release_date) >= ?";
+
     public void findAllFilmsByYear() {
         try (Connection connection = ConnectToVideoLibraryDB.getConnectionToDB();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_FILMS_BY_YEAR)) {
@@ -72,13 +75,21 @@ public class GetDataFromDB {
             getInformationFilmsByNumberOfActors.setInt(1, numberActors);
             ResultSet setFilms = getInformationFilmsByNumberOfActors.executeQuery();
             while (setFilms.next())
-                System.out.printf("%d.%s\n  Data of release - %s\n  Country of release - %s\n  Number of actors in this film - %d\n", setFilms.getRow(),setFilms.getString("name_film"),setFilms.getDate("release_date"), setFilms.getString("country_release"),setFilms.getInt("number_actors"));
+                System.out.printf("%d.%s\n  Data of release - %s\n  Country of release - %s\n  Number of actors in this film - %d\n", setFilms.getRow(), setFilms.getString("name_film"), setFilms.getDate("release_date"), setFilms.getString("country_release"), setFilms.getInt("number_actors"));
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteFilmsByData() {
+    public void deleteFilmsByDate(BufferedReader reader) {
+        try (Connection connection = ConnectToVideoLibraryDB.getConnectionToDB();
+             PreparedStatement deleteFilm = connection.prepareStatement(SQL_DELETE_FILM_BY_YEAR)) {
+            System.out.println("Enter the number of years to delete all films that are older than this number");
+            int numberYears = Integer.parseInt(reader.readLine());
+            deleteFilm.setInt(1, numberYears);
+            deleteFilm.executeUpdate();
+        } catch (SQLException | IOException e) {
 
+        }
     }
 }
