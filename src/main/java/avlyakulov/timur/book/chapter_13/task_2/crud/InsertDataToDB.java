@@ -1,4 +1,4 @@
-package avlyakulov.timur.book.chapter_13.task_2.insert;
+package avlyakulov.timur.book.chapter_13.task_2.crud;
 
 import avlyakulov.timur.book.chapter_13.task_2.conn.ConnectToVideoLibraryDB;
 
