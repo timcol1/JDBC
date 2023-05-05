@@ -32,7 +32,7 @@ public class OperateDataDB {
                     System.out.println("From this list enter day of week for this subject");
                     System.out.println(Arrays.toString(DaysOfWeek.values()));
                     DaysOfWeek dayOfWeek = DaysOfWeek.valueOf(reader.readLine().toUpperCase());
-                    insertSubject.setString(2, dayOfWeek.name());
+                    insertSubject.setString(2, dayOfWeek.getName());
                     System.out.println("Enter the audience number of subject");
                     int audienceNumber = Integer.parseInt(reader.readLine());
                     insertSubject.setInt(3, audienceNumber);
