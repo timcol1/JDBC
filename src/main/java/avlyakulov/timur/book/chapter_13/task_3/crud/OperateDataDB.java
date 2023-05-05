@@ -4,7 +4,6 @@ import avlyakulov.timur.book.chapter_13.task_3.conn.ConnectToSchoolDB;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.Arrays;
 
@@ -13,9 +12,8 @@ public class OperateDataDB {
     private final String SQL_INSERT_SUBJECT = "INSERT INTO school.subjects (subject_name,day_of_week,audience_number,number_classes,number_students,id_teacher)\n" +
             "values (?,?,?,?,?,?);";
 
-    private void insertDataToDB() {
+    public void insertDataToDB(BufferedReader reader) {
         try (Connection connection = ConnectToSchoolDB.getConnectionToSchoolDB();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
              PreparedStatement insertTeacher = connection.prepareStatement(SQL_INSERT_TEACHER);
              PreparedStatement insertSubject = connection.prepareStatement(SQL_INSERT_SUBJECT)) {
             System.out.println("Choose table where you want to insert data\n1.teachers\n2.subjects");
@@ -46,15 +44,15 @@ public class OperateDataDB {
                     insertSubject.setInt(5, numberStudents);
                     System.out.println("From this list enter fullname of teacher who teaches this lesson");
                     Statement subjectQuery = connection.createStatement();
-                    ResultSet setOfTeachers = subjectQuery.executeQuery("Select name from school.teachers");
+                    ResultSet setOfTeachers = subjectQuery.executeQuery("Select fullname from school.teachers");
                     while (setOfTeachers.next())
-                        System.out.printf("%d.%s", setOfTeachers.getRow(), setOfTeachers.getString("fullname"));
+                        System.out.printf("%d.%s\n", setOfTeachers.getRow(), setOfTeachers.getString("fullname"));
                     String nameTeacher = reader.readLine();
-                    int idTeacher = 0;
                     ResultSet idTeacherRes = subjectQuery.executeQuery("Select id_teacher from school.teachers where fullname = '" + nameTeacher + "'");
-                    while (idTeacherRes.next())
-                        idTeacher = idTeacherRes.getInt(1);
+                    idTeacherRes.next();
+                    int idTeacher = idTeacherRes.getInt(1);
                     insertSubject.setInt(6, idTeacher);
+                    insertSubject.executeUpdate();
                 }
             }
         } catch (SQLException | IOException e) {
