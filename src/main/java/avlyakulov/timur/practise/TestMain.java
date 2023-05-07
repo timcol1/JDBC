@@ -1,11 +1,10 @@
 package avlyakulov.timur.practise;
 
+import javax.xml.transform.Result;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class TestMain {
@@ -23,10 +22,14 @@ public class TestMain {
         url = properties.getProperty("db.host");
         name = properties.getProperty("db.name");
         pass = properties.getProperty("db.pass");
-        try (Connection connection = DriverManager.getConnection(url,name,pass)) {
-            System.out.println("we are connected!!!!!");
-        } catch (SQLException e) {
+        try (Connection connection = DriverManager.getConnection(url, name, pass);
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * from school.teachers")) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next())
+                System.out.println(resultSet.getString(2));
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
