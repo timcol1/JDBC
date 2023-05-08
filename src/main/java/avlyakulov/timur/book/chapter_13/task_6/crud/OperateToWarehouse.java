@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.*;
 
-public class OperateToDB {
+public class OperateToWarehouse {
 
     private String SQL_INSERT_TO_PRODUCTS = "insert into warehouse.products (name_product, description, price) \n" +
             "values (?,?,?)";
@@ -14,6 +14,14 @@ public class OperateToDB {
             "values (?)";
     private String SQL_INSERT_FULL_ORDER = "insert into warehouse.products_in_order (id_order, id_product)\n" +
             "values (?,?)";
+
+    private String SQL_GET_INFO_ORDERS = "select products_in_order.id_order, sum(price)\n" +
+            "from warehouse.products_in_order\n" +
+            "inner join warehouse.orders  on orders.id_order = products_in_order.id_order\n" +
+            "inner join warehouse.products p on p.id_product = products_in_order.id_product\n" +
+            "group by products_in_order.id_order\n" +
+            "order by products_in_order.id_order\n";
+
 
     public void insertDataToDB(BufferedReader reader) {
         try (Connection connection = ConnectionToDB.getConnection();
@@ -43,7 +51,7 @@ public class OperateToDB {
                     insertOrder.executeUpdate();
                     ResultSet idOrderRes = statement.executeQuery("select id_order\n" +
                             "from warehouse.orders\n" +
-                            "where date_order = (select max(date_order)\n" +
+                            "where id_order = (select max(id_order)\n" +
                             "                    from warehouse.orders);");
                     idOrderRes.next();
                     int idOrder = idOrderRes.getInt(1);
@@ -57,7 +65,7 @@ public class OperateToDB {
                             System.out.printf("%d.%s\n", setProducts.getRow(), setProducts.getString(1));
                         }
                         String nameProduct = reader.readLine();
-                        ResultSet getIdProduct = statement.executeQuery("Select id_product from warehouse.products" +
+                        ResultSet getIdProduct = statement.executeQuery("Select id_product from warehouse.products " +
                                 "where name_product = '" + nameProduct + "'");
                         getIdProduct.next();
                         int idProduct = getIdProduct.getInt(1);
@@ -73,4 +81,16 @@ public class OperateToDB {
             throw new RuntimeException(e);
         }
     }
+
+    public void getInfoAboutOrders() {
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement getOrders = connection.prepareStatement(SQL_GET_INFO_ORDERS)) {
+            ResultSet orders = getOrders.executeQuery();
+            while (orders.next())
+                System.out.printf("%d.ID order - %d\nPrice of this order - %d\n", orders.getRow(), orders.getInt(1), orders.getInt(2));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
