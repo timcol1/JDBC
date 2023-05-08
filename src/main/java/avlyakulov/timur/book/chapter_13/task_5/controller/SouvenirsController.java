@@ -27,12 +27,20 @@ public class SouvenirsController {
     private void crud(String answer, BufferedReader reader) {
         switch (answer) {
             case "1" -> operateDataSouvenirs.insertDataToDB(reader);
+            case "2" -> operateDataSouvenirs.getInformationOfProductsByProducer(reader);
+            case "3" -> operateDataSouvenirs.getInformationOfProductsByCountry(reader);
+            case "4" -> operateDataSouvenirs.getProducersInformationByYear(reader);
+            case "5" -> operateDataSouvenirs.deleteProducerAndHisProducts(reader);
         }
     }
 
     private void runNavigation() {
         System.out.println();
         System.out.println("If you want to insert data press 1");
+        System.out.println("If you want to get information about products by producer name press 2");
+        System.out.println("If you want to get information about products by country press 3");
+        System.out.println("If you want to get information about producers by year of release press 4");
+        System.out.println("If you want delete producer press 5");
         System.out.println("If you want to finish program press 0");
         System.out.println();
     }
