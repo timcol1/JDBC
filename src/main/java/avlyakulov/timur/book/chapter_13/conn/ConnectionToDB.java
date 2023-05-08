@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionToDB {
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         Properties properties = new Properties();
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/postgres.properties"))) {
             properties.load(reader);
