@@ -2,6 +2,7 @@ package avlyakulov.timur.book.chapter_13.task_8.crud;
 
 import avlyakulov.timur.book.chapter_13.conn.ConnectionToDB;
 
+import javax.xml.transform.Result;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.*;
@@ -24,6 +25,13 @@ public class OperateToForecastDB {
             "inner join forecast.weather on region.id_region = weather.id_region\n" +
             "inner join forecast.people on people.id_people = region.id_people\n" +
             "where language_people = ? and extract (week from date_weather) = (extract(week from current_date) - 1)";
+
+    private String GET_WEATHER_LAST_WEEK_REGIONS = "select name_region, avg(temperature)\n" +
+            "from forecast.region\n" +
+            "inner join forecast.weather on region.id_region = weather.id_region\n" +
+            "inner join forecast.people on people.id_people = region.id_people\n" +
+            "where  extract (week from date_weather) = (extract(week from current_date) - 1) \n" +
+            "group by name_region";
 
     public void insetDataToDB(BufferedReader reader) {
         try (Connection connection = ConnectionToDB.getConnection();
@@ -115,14 +123,26 @@ public class OperateToForecastDB {
              PreparedStatement getWeatherByLanguage = connection.prepareStatement(SQL_GET_WEATHER_LANGUAGE_DATE)) {
             System.out.println("From this list choose language to find weather ");
             ResultSet setLanguages = connection.createStatement().executeQuery("Select language_people from forecast.people");
-            while(setLanguages.next())
-                System.out.printf("%d.%s\n", setLanguages.getRow(),setLanguages.getString(1));
+            while (setLanguages.next())
+                System.out.printf("%d.%s\n", setLanguages.getRow(), setLanguages.getString(1));
             String language = reader.readLine();
             getWeatherByLanguage.setString(1, language);
             ResultSet setWeather = getWeatherByLanguage.executeQuery();
             while (setWeather.next())
                 System.out.printf("%d.%s\nDate weather - %s\nTemperature - %d\n", setWeather.getRow(), setWeather.getString(1), setWeather.getDate(2), setWeather.getInt(3));
         } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //Вывести среднюю температуру за прошедшую неделю в регионах
+    public void getAverageWeatherForLastWeek() {
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement getWeatherLastWeek = connection.prepareStatement(GET_WEATHER_LAST_WEEK_REGIONS)) {
+            ResultSet weatherLastWeek = getWeatherLastWeek.executeQuery();
+            while (weatherLastWeek.next())
+                System.out.printf("%d.%s\nAverage temperature for last week - %.1f\n", weatherLastWeek.getRow(), weatherLastWeek.getString(1), weatherLastWeek.getDouble(2));
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

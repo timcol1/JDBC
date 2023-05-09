@@ -29,6 +29,7 @@ public class WeatherController {
         System.out.println("If you want to insert data to db press 1");
         System.out.println("If you want get weather by region name press 2");
         System.out.println("if you want to get information about weather by language for last week press 3");
+        System.out.println("If you want to get average temperature in regions for last week press 4");
         System.out.println("If you want to finish program press 0");
         System.out.println();
     }
@@ -38,6 +39,7 @@ public class WeatherController {
             case "1" -> operateToForecastDB.insetDataToDB(reader);
             case "2" -> operateToForecastDB.getWeatherByRegion(reader);
             case "3" -> operateToForecastDB.getWeatherByLanguageForLastWeek(reader);
+            case "4" -> operateToForecastDB.getAverageWeatherForLastWeek();
         }
     }
 }
