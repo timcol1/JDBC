@@ -2,31 +2,30 @@ package avlyakulov.timur.book.chapter_13.task_8.crud;
 
 import avlyakulov.timur.book.chapter_13.conn.ConnectionToDB;
 
-import javax.xml.transform.Result;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.*;
 
 public class OperateToForecastDB {
-    private String SQL_INSERT_PEOPLE = "Insert into forecast.people (name_people,language_people) values (?,?)";
-    private String SQL_GET_ALL_PEOPLE = "SELECT name_people from forecast.people";
-    private String SQL_INSERT_REGION = "Insert into forecast.region (name_region,square_region,id_people) " +
+    private final String SQL_INSERT_PEOPLE = "Insert into forecast.people (name_people,language_people) values (?,?)";
+    private final String SQL_GET_ALL_PEOPLE = "SELECT name_people from forecast.people";
+    private final String SQL_INSERT_REGION = "Insert into forecast.region (name_region,square_region,id_people) " +
             "values (?,?,?)";
-    private String SQL_INSERT_WEATHER = "insert into forecast.weather (date_weather,temperature, id_region) " +
+    private final String SQL_INSERT_WEATHER = "insert into forecast.weather (date_weather,temperature, id_region) " +
             "values (?,?,?)";
 
-    private String SQL_GET_WEATHER_REGION = "select name_region,date_weather, temperature\n" +
+    private final String SQL_GET_WEATHER_REGION = "select name_region,date_weather, temperature\n" +
             "from forecast.region\n" +
             "inner join forecast.weather on region.id_region = weather.id_region " +
             "where name_region = ?";
 
-    private String SQL_GET_WEATHER_LANGUAGE_DATE = "select name_region,date_weather, temperature\n" +
+    private final String SQL_GET_WEATHER_LANGUAGE_DATE = "select name_region,date_weather, temperature\n" +
             "from forecast.region\n" +
             "inner join forecast.weather on region.id_region = weather.id_region\n" +
             "inner join forecast.people on people.id_people = region.id_people\n" +
             "where language_people = ? and extract (week from date_weather) = (extract(week from current_date) - 1)";
 
-    private String GET_WEATHER_LAST_WEEK_REGIONS = "select name_region, avg(temperature)\n" +
+    private final String GET_WEATHER_LAST_WEEK_REGIONS = "select name_region, avg(temperature)\n" +
             "from forecast.region\n" +
             "inner join forecast.weather on region.id_region = weather.id_region\n" +
             "inner join forecast.people on people.id_people = region.id_people\n" +
