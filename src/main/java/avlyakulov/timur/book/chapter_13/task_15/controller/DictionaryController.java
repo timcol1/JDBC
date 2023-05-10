@@ -27,6 +27,7 @@ public class DictionaryController {
     private void runNavigation() {
         System.out.println();
         System.out.println("If you want to add to dictionary your word with translation press 1");
+        System.out.println("If you want to get translations from dictionary press 2");
         System.out.println("If you want to finish your program press 0");
         System.out.println();
     }
@@ -34,6 +35,7 @@ public class DictionaryController {
     private void crud(String answer, BufferedReader reader) {
         switch (answer) {
             case "1" -> operateWordsToDB.insertTranslationToDB(reader);
+            case "2" -> operateWordsToDB.getTranslations();
         }
     }
 }

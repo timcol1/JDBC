@@ -14,6 +14,10 @@ public class OperateWordsToDB {
     private String SQL_INSERT_ENG_WORD = "insert into dictionary.english_word (eng_word) values (?)";
     private String SQL_INSERT_UKR_WORD = "insert into dictionary.ukrainian_word (ukr_word) values (?)";
     private String SQL_INSERT_TRANSLATION = "insert into dictionary.translations (id_word_ukr,id_word_eng) values (?,?)";
+    private String SQL_GET_TRANSLATIONS = "select ukr_word, eng_word\n" +
+            "    from dictionary.translations\n" +
+            "inner join dictionary.english_word on english_word.id_word = translations.id_word_eng\n" +
+            "inner join dictionary.ukrainian_word on ukrainian_word.id_word = translations.id_word_ukr\n";
 
     public void insertTranslationToDB(BufferedReader reader) {
         try (Connection connection = ConnectionToDB.getConnection();
@@ -47,6 +51,19 @@ public class OperateWordsToDB {
                 }
             }
         } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getTranslations() {
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement getTranslations = connection.prepareStatement(SQL_GET_TRANSLATIONS)) {
+            ResultSet translations = getTranslations.executeQuery();
+            System.out.println("List of word and translations");
+            while (translations.next())
+                System.out.printf("%d. %s - %s\n", translations.getRow(), translations.getString(1), translations.getString(2));
+
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
