@@ -6,12 +6,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.*;
 
-public class OperatePlanetController {
+public class OperatePlanetDB {
     private String SQL_INSERT_GALAXY = "Insert into space.galaxy (name_galaxy) values (?)";
     private String SQL_INSERT_PLANET = "Insert into space.planets (name_planet, radius,core_temperature, atmosphere, life, id_galaxy)" +
             " values (?,?,?,?,?,?)";
     private String SQL_INSERT_SATELLITE = "Insert into space.satellites (name_satellite, radius, distance_to_planet, id_planet) " +
             "values (?,?,?,?)";
+    private String SQL_GET_PLANETS_BY_GALAXY = "select name_planet, planets.radius,core_temperature,atmosphere,life,name_satellite,distance_to_planet\n" +
+            "from space.planets\n" +
+            "inner join space.satellites on satellites.id_planet = planets.id_planet\n" +
+            "inner join space.galaxy on planets.id_galaxy = galaxy.id_galaxy\n" +
+            "where life = true and  name_galaxy = ?";
+
+    private String SQL_GET_GALAXY_MAX_TEMPERATURE = "select name_galaxy, sum(core_temperature)\n" +
+            "from space.galaxy\n" +
+            "         inner join space.planets on planets.id_galaxy = galaxy.id_galaxy\n" +
+            "group by name_galaxy\n" +
+            "order by sum(core_temperature) desc\n" +
+            "LIMIT 1\n";
 
     public void insertDataToDB(BufferedReader reader) {
         try (Connection connection = ConnectionToDB.getConnection();
@@ -45,7 +57,7 @@ public class OperatePlanetController {
                     boolean life = reader.readLine().equalsIgnoreCase("y");
                     insertPlanet.setBoolean(5, life);
                     System.out.println("From this list enter the name of galaxy where this planet is placed");
-                    ResultSet setGalaxies = statement.executeQuery("Select name_galaxy from space.galalxy");
+                    ResultSet setGalaxies = statement.executeQuery("Select name_galaxy from space.galaxy");
                     while (setGalaxies.next())
                         System.out.printf("%d.%s\n", setGalaxies.getRow(), setGalaxies.getString(1));
                     String nameGalaxy = reader.readLine();
@@ -64,22 +76,54 @@ public class OperatePlanetController {
                     int radiusSatellite = Integer.parseInt(reader.readLine());
                     insertSatellite.setInt(2, radiusSatellite);
                     System.out.println("From this list enter the name of planet where this satellite is placed");
-                    ResultSet setPlanets = statement.executeQuery("Select name_planet from space.planet");
+                    ResultSet setPlanets = statement.executeQuery("Select name_planet from space.planets");
                     while (setPlanets.next())
                         System.out.printf("%d.%s\n", setPlanets.getRow(), setPlanets.getString(1));
                     String namePlanet = reader.readLine();
-                    ResultSet idPlanetRes = statement.executeQuery("select id_planet from space.planet " +
+                    ResultSet idPlanetRes = statement.executeQuery("select id_planet from space.planets " +
                             "where name_planet = '" + namePlanet + "'");
                     idPlanetRes.next();
                     int idPlanet = idPlanetRes.getInt(1);
-                    insertPlanet.setInt(4, idPlanet);
+                    insertSatellite.setInt(4, idPlanet);
                     System.out.println("Enter the distance to planet ");
                     int distancePlanet = Integer.parseInt(reader.readLine());
-                    insertPlanet.setInt(3, distancePlanet);
-                    insertPlanet.executeUpdate();
+                    insertSatellite.setInt(3, distancePlanet);
+                    insertSatellite.executeUpdate();
                 }
             }
         } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //Вывести информацию обо всех планетах, на которых присутствует жизнь, и их спутниках в заданной галактике
+    public void getInformationAboutPlanetByGalaxy(BufferedReader reader) {
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement getPlanets = connection.prepareStatement(SQL_GET_PLANETS_BY_GALAXY)) {
+            Statement statement = connection.createStatement();
+            System.out.println("From this list enter the name of galaxy where this planet is placed");
+            ResultSet setGalaxies = statement.executeQuery("Select name_galaxy from space.galaxy");
+            while (setGalaxies.next())
+                System.out.printf("%d.%s\n", setGalaxies.getRow(), setGalaxies.getString(1));
+            String nameGalaxy = reader.readLine();
+            getPlanets.setString(1, nameGalaxy);
+            ResultSet setPlanets = getPlanets.executeQuery();
+            while (setPlanets.next())
+                System.out.printf("%d.%s\nRadius - %d\nCore temperature - %d\nDoes it has atmosphere - %b\nDoes it has life - %b\nName satellite - %s\nDistance to planet from satellite - %d\n",
+                        setPlanets.getRow(), setPlanets.getString("name_planet"), setPlanets.getInt("radius"), setPlanets.getInt("core_temperature"), setPlanets.getBoolean("atmosphere"), setPlanets.getBoolean("life"), setPlanets.getString("name_satellite"), setPlanets.getInt("distance_to_planet"));
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //Найти галактику, сумма ядерных температур планет которой наибольшая.
+    public void findGalaxyMaxCoreTemperature() {
+        try (Connection connection = ConnectionToDB.getConnection();
+             PreparedStatement getGalaxy = connection.prepareStatement(SQL_GET_GALAXY_MAX_TEMPERATURE)) {
+            ResultSet setGalaxy = getGalaxy.executeQuery();
+            while (setGalaxy.next())
+                System.out.printf("%d.%s\nSum of temperature core planets - %d \n", setGalaxy.getRow(), setGalaxy.getString(1), setGalaxy.getInt(2));
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
