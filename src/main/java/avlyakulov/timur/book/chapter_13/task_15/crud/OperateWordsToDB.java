@@ -33,12 +33,12 @@ public class OperateWordsToDB {
                     insertUkrWord.executeUpdate();
                     insertEngWord.executeUpdate();
                     Statement statement = connection.createStatement();
-                    ResultSet idWordUkrRes = statement.executeQuery("select id from dictionary.ukrainian_word " +
+                    ResultSet idWordUkrRes = statement.executeQuery("select id_word from dictionary.ukrainian_word " +
                             "where ukr_word = '" + ukrWord + "'");
                     idWordUkrRes.next();
                     int idUkrWord = idWordUkrRes.getInt(1);
                     insertTranslation.setInt(1, idUkrWord);
-                    ResultSet idWordEngRes = statement.executeQuery("select id from dictionary.english_word " +
+                    ResultSet idWordEngRes = statement.executeQuery("select id_word from dictionary.english_word " +
                             "where eng_word = '" + engWord + "'");
                     idWordEngRes.next();
                     int idEngWord = idWordEngRes.getInt(1);
